@@ -31,6 +31,13 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha06'
     implementation 'com.google.android.material:material:1.1.0-alpha07'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0-alpha01"
+
+
+    //Room
+    implementation "android.arch.persistence.room:runtime:1.1.1"
+    kapt "android.arch.persistence.room:compiler:1.1.1"
     // Kodein
     implementation 'org.kodein.di:kodein-di-generic-jvm:5.2.0'
     implementation 'org.kodein.di:kodein-di-framework-android-x:5.2.0'

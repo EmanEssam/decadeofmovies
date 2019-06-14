@@ -1,20 +1,20 @@
 package com.swvl.decadeofmovies.ui.view
 
-import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
+import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.swvl.decadeofmovies.R
-
-import com.swvl.decadeofmovies.dummy.DummyContent
+import com.swvl.decadeofmovies.ui.adapter.MovieAdapter
+import com.swvl.decadeofmovies.ui.viewmodel.MovieViewModel
+import com.swvl.decadeofmovies.ui.viewmodel.MovieViewModelFactory
 import kotlinx.android.synthetic.main.activity_movie_list.*
-import kotlinx.android.synthetic.main.movie_list_content.view.*
 import kotlinx.android.synthetic.main.movie_list.*
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.closestKodein
+import org.kodein.di.generic.instance
 
 /**
  * An activity representing a list of Pings. This activity
@@ -24,13 +24,18 @@ import kotlinx.android.synthetic.main.movie_list.*
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-class MovieListActivity : AppCompatActivity() {
-
+class MovieListActivity : AppCompatActivity(), KodeinAware {
+    override val kodein by closestKodein()
+    private val viewModelFactory: MovieViewModelFactory by instance()
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
     private var twoPane: Boolean = false
+    private lateinit var movieAdapter: MovieAdapter
+    private lateinit var searchView: SearchView
+
+    private lateinit var viewModel: MovieViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +43,14 @@ class MovieListActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar)
         toolbar.title = title
+
+        initUI()
+
+    }
+
+    private fun initUI() {
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(MovieViewModel::class.java)
 
         if (item_detail_container != null) {
             // The detail container view will be present only in the
@@ -47,67 +60,47 @@ class MovieListActivity : AppCompatActivity() {
             twoPane = true
         }
 
-        setupRecyclerView(item_list)
+
+        // Observing LiveData from the QuotesViewModel which in turn observes
+        // LiveData from the repository, which observes LiveData from the DAO ☺
+        viewModel.getLocalMovies().observe(this, Observer { movies ->
+            movieAdapter = MovieAdapter(this, movies, twoPane)
+            item_list.adapter = movieAdapter
+
+        })
+
+
     }
 
-    private fun setupRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.adapter = SimpleItemRecyclerViewAdapter(
-            this,
-            DummyContent.ITEMS,
-            twoPane
-        )
-    }
 
-    class SimpleItemRecyclerViewAdapter(
-        private val parentActivity: MovieListActivity,
-        private val values: List<DummyContent.DummyItem>,
-        private val twoPane: Boolean
-    ) :
-        RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder>() {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.search_menu, menu)
+        val searchItem = menu!!.findItem(R.id.action_search)
+        searchView = searchItem.actionView as SearchView
+        searchView.setSubmitButtonEnabled(true)
+        searchView.setQueryHint("Search By Movie name")
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String): Boolean {
 
-        private val onClickListener: View.OnClickListener
-
-        init {
-            onClickListener = View.OnClickListener { v ->
-                val item = v.tag as DummyContent.DummyItem
-                if (twoPane) {
-                    val fragment = MovieDetailFragment().apply {
-                        arguments = Bundle().apply {
-                            putString(MovieDetailFragment.ARG_ITEM_ID, item.id)
-                        }
-                    }
-                    parentActivity.supportFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.item_detail_container, fragment)
-                        .commit()
-                } else {
-                    val intent = Intent(v.context, MovieDetailActivity::class.java).apply {
-                        putExtra(MovieDetailFragment.ARG_ITEM_ID, item.id)
-                    }
-                    v.context.startActivity(intent)
-                }
+                getFilteredMoviesFromDb(newText)
+                return true
             }
-        }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.movie_list_content, parent, false)
-            return ViewHolder(view)
-        }
-
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val item = values[position]
-
-            with(holder.itemView) {
-                tag = item
-                setOnClickListener(onClickListener)
+            override fun onQueryTextSubmit(query: String): Boolean {
+                return true
             }
-        }
-
-        override fun getItemCount() = values.size
-
-        inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-        }
+        })
+        return super.onCreateOptionsMenu(menu)
     }
+
+    private fun getFilteredMoviesFromDb(newText: String) {
+        val searchTextQuery = "%$newText%"
+        viewModel.getMoviesByName(searchTextQuery).observe(this, Observer {
+            movieAdapter = MovieAdapter(this, it, twoPane)
+            item_list.adapter = movieAdapter
+        })
+    }
+
+
 }
