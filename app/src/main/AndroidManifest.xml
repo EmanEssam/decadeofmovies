@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.swvl.decadeofmovies">
-
+<uses-permission android:name="android.permission.INTERNET"/>
     <application
             android:name=".utils.MovieApplication"
             android:allowBackup="true"
@@ -22,7 +22,6 @@
         </activity>
         <activity
                 android:name=".ui.view.MovieDetailActivity"
-                android:label="@string/title_item_detail"
                 android:parentActivityName=".ui.view.MovieListActivity"
                 android:theme="@style/AppTheme.NoActionBar">
             <meta-data
