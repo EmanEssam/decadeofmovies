@@ -1,14 +1,26 @@
 package com.swvl.decadeofmovies.ui.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
 import com.swvl.decadeofmovies.R
-import com.swvl.decadeofmovies.dummy.DummyContent
-import kotlinx.android.synthetic.main.activity_movie_detail.*
+import com.swvl.decadeofmovies.data.model.Movie
+import com.swvl.decadeofmovies.data.model.Photo
+import com.swvl.decadeofmovies.ui.adapter.PhotosAdapter
+import com.swvl.decadeofmovies.ui.viewmodel.DetailsActivityViewModel
+import com.swvl.decadeofmovies.ui.viewmodel.DetailsActivityViewModelFactory
 import kotlinx.android.synthetic.main.movie_detail.view.*
+import kotlinx.android.synthetic.main.movie_list_content.view.movieTitle
+import org.kodein.di.Kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.closestKodein
+import org.kodein.di.generic.instance
 
 /**
  * A fragment representing a single Item detail screen.
@@ -16,23 +28,28 @@ import kotlinx.android.synthetic.main.movie_detail.view.*
  * in two-pane mode (on tablets) or a [MovieDetailActivity]
  * on handsets.
  */
-class MovieDetailFragment : Fragment() {
+class MovieDetailFragment : Fragment(), KodeinAware {
 
     /**
      * The dummy content this fragment is presenting.
      */
-    private var item: DummyContent.DummyItem? = null
+    override val kodein: Kodein by closestKodein()
 
+    private val viewModelFactory: DetailsActivityViewModelFactory by instance()
+
+    private lateinit var selectedMovies: Movie
+    private lateinit var photosAdapter: PhotosAdapter
+    val photo = MutableLiveData<Photo>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         arguments?.let {
-            if (it.containsKey(ARG_ITEM_ID)) {
+            if (it.containsKey("movie")) {
                 // Load the dummy content specified by the fragment
                 // arguments. In a real-world scenario, use a Loader
                 // to load content from a content provider.
-                item = DummyContent.ITEM_MAP[it.getString(ARG_ITEM_ID)]
-                activity?.toolbar_layout?.title = item?.content
+                selectedMovies = it.getSerializable("movie") as Movie
+
+
             }
         }
     }
@@ -42,13 +59,38 @@ class MovieDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val rootView = inflater.inflate(R.layout.movie_detail, container, false)
-
-        // Show the dummy content as text in a TextView.
-        item?.let {
-            rootView.item_detail.text = it.details
+        selectedMovies.let {
+            rootView.movieTitle?.text = selectedMovies.title
+            rootView.movie_year?.text = selectedMovies.year
+            rootView.movie_cast?.text = selectedMovies.cast.toString()
+            rootView.movie_genres?.text = selectedMovies.genres.toString()
         }
+        val viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(DetailsActivityViewModel::class.java)
+        viewModel.getPhotosFromApi(selectedMovies.title).observe(this, Observer { it ->
+            photo.value = it
+            rootView.photoPbar.visibility = View.GONE
+            setupPhotoAdapter(rootView, photo)
+
+
+        })
+
+
+        // Show the dummy contentl as text in a TextView.
+//        movie?.let {
+//            //            rootView.item_detail.text = it.details
+//        }
 
         return rootView
+    }
+
+    private fun setupPhotoAdapter(rootView: View, photo: MutableLiveData<Photo>) {
+        rootView.photos_rv.layoutManager = GridLayoutManager(activity, 2)
+        photosAdapter = PhotosAdapter(photo)
+        rootView.photos_rv.adapter = photosAdapter
+        rootView.photos_rv.visibility = View.VISIBLE
+        photosAdapter.notifyDataSetChanged()
+
     }
 
     companion object {

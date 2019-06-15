@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.swvl.decadeofmovies.R
+import com.swvl.decadeofmovies.data.model.Movie
 import kotlinx.android.synthetic.main.activity_movie_detail.*
 
 /**
@@ -20,6 +21,10 @@ class MovieDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_movie_detail)
         setSupportActionBar(detail_toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        val movie: Movie = intent.extras.get("movie") as Movie
+
+        setTitle(movie.title)
+
 
         // Show the Up button in the action bar.
 
@@ -40,7 +45,10 @@ class MovieDetailActivity : AppCompatActivity() {
                     putString(
                         MovieDetailFragment.ARG_ITEM_ID,
                         intent.getStringExtra(MovieDetailFragment.ARG_ITEM_ID)
+
                     )
+                    putSerializable("movie", movie)
+
                 }
             }
 
