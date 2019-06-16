@@ -16,7 +16,7 @@ import com.swvl.decadeofmovies.ui.adapter.PhotosAdapter
 import com.swvl.decadeofmovies.ui.viewmodel.DetailsActivityViewModel
 import com.swvl.decadeofmovies.ui.viewmodel.DetailsActivityViewModelFactory
 import kotlinx.android.synthetic.main.movie_detail.view.*
-import kotlinx.android.synthetic.main.movie_list_content.view.movieTitle
+import kotlinx.android.synthetic.main.movie_list_content.view.*
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
@@ -62,8 +62,8 @@ class MovieDetailFragment : Fragment(), KodeinAware {
         selectedMovies.let {
             rootView.movieTitle?.text = selectedMovies.title
             rootView.movie_year?.text = selectedMovies.year
-            rootView.movie_cast?.text = selectedMovies.cast.toString()
-            rootView.movie_genres?.text = selectedMovies.genres.toString()
+            rootView.movie_cast?.text = selectedMovies.cast.toString().replace("[", "").replace("]", "")
+            rootView.movie_genres?.text = selectedMovies.genres.toString().replace("[", "").replace("]", "")
         }
         val viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(DetailsActivityViewModel::class.java)
@@ -89,6 +89,7 @@ class MovieDetailFragment : Fragment(), KodeinAware {
         photosAdapter = PhotosAdapter(photo)
         rootView.photos_rv.adapter = photosAdapter
         rootView.photos_rv.visibility = View.VISIBLE
+        rootView.photos_rv.setHasFixedSize(true)
         photosAdapter.notifyDataSetChanged()
 
     }

@@ -29,13 +29,16 @@ class MovieAdapter(
     init {
         onClickListener = View.OnClickListener { v ->
 
-            //            val item = v.tag as DummyContent.DummyItem
             if (twoPane) {
                 val fragment = MovieDetailFragment().apply {
                     arguments = Bundle().apply {
-                        //                        putString(ItemDetailFragment.ARG_ITEM_ID, item.id)
+
+                        putSerializable("movie", selectedMovie)
+
                     }
                 }
+
+
                 parentActivity.supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.item_detail_container, fragment)
@@ -57,17 +60,18 @@ class MovieAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
+        val item = values[holder.adapterPosition]
         holder.idView.text = item.title
         holder.contentView.text = item.year
         holder.genres.text = item.genres.toString()
         holder.ratingBar.rating = item.rating.toFloat()
 
+        selectedMovie = item
         with(holder.itemView) {
             tag = item
-            selectedMovie = item
             setOnClickListener(onClickListener)
         }
+
     }
 
     override fun getItemCount() = values.size
@@ -77,5 +81,9 @@ class MovieAdapter(
         val contentView: TextView = view.year
         val genres: TextView = view.genres
         val ratingBar: RatingBar = view.ratingBar
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return super.getItemViewType(position)
     }
 }

@@ -9,10 +9,11 @@
         android:layout_height="wrap_content">
 
     <ImageView
+            android:scaleType="fitXY"
             android:src="@drawable/movie_placeholder"
             android:id="@+id/movie_photo"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="250dp"
             app:layout_constraintBottom_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.cardview.widget.CardView>
