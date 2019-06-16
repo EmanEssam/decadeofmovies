@@ -16,6 +16,6 @@ interface MovieDao {
     @Insert
     fun insertAll(movies: List<Movie>)
 
-    @Query("SELECT * FROM movies WHERE title LIKE :movie_name")
+    @Query("SELECT * FROM movies WHERE title LIKE :movie_name order by rating limit 5")
     fun getMoviesByName(movie_name: String): LiveData<List<Movie>>
 }

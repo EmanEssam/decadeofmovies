@@ -60,8 +60,7 @@ class MovieAdapter(
         val item = values[position]
         holder.idView.text = item.title
         holder.contentView.text = item.year
-        holder.genres.text = item.genres[0]
-        holder.cast.text = item.cast[0]
+        holder.genres.text = item.genres.toString()
         holder.ratingBar.rating = item.rating.toFloat()
 
         with(holder.itemView) {
@@ -77,7 +76,6 @@ class MovieAdapter(
         val idView: TextView = view.movieTitle
         val contentView: TextView = view.year
         val genres: TextView = view.genres
-        val cast: TextView = view.castNames
         val ratingBar: RatingBar = view.ratingBar
     }
 }
