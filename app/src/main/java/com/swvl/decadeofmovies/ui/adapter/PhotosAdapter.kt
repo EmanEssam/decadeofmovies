@@ -26,7 +26,7 @@ class PhotosAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder.itemView) {
             val item = values.value!!.photos.photo[position]
-            Glide.with(context).load(getPhotoUrl(item.farm, item.id, item.secret, item.server)).into(holder.movie_Image)
+            Glide.with(context).load(getPhotoUrl(item.farm, item.server, item.id, item.secret)).into(holder.movie_Image)
 
         }
     }
