@@ -52,6 +52,8 @@ class MovieDetailFragment : Fragment(), KodeinAware {
 
             }
         }
+        retainInstance = true
+
     }
 
     override fun onCreateView(
@@ -65,23 +67,28 @@ class MovieDetailFragment : Fragment(), KodeinAware {
             rootView.movie_cast?.text = selectedMovies.cast.toString().replace("[", "").replace("]", "")
             rootView.movie_genres?.text = selectedMovies.genres.toString().replace("[", "").replace("]", "")
         }
-        val viewModel = ViewModelProviders.of(this, viewModelFactory)
-            .get(DetailsActivityViewModel::class.java)
-        viewModel.getPhotosFromApi(selectedMovies.title).observe(this, Observer { it ->
-            photo.value = it
-            rootView.photoPbar.visibility = View.GONE
-            setupPhotoAdapter(rootView, photo)
+
+        if (photo.value == null) {
+            val viewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(DetailsActivityViewModel::class.java)
+            viewModel.getPhotosFromApi(selectedMovies.title).observe(this, Observer { it ->
+                photo.value = it
+                showPhotoList(rootView)
 
 
-        })
+            })
 
+        } else {
+            showPhotoList(rootView)
+        }
 
-        // Show the dummy contentl as text in a TextView.
-//        movie?.let {
-//            //            rootView.item_detail.text = it.details
-//        }
 
         return rootView
+    }
+
+    private fun showPhotoList(rootView: View) {
+        rootView.photoPbar.visibility = View.GONE
+        setupPhotoAdapter(rootView, photo)
     }
 
     private fun setupPhotoAdapter(rootView: View, photo: MutableLiveData<Photo>) {
