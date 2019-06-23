@@ -27,13 +27,15 @@ class MovieRepositoryImpl(private val movieDao: MovieDao, private val context: C
 
 
     private fun getParesdMovies(): List<Movie> {
-        return MovieData.parseMovies(context)
+        val movieJsonData = MovieData.readMovies(context)
+        return MovieData.parseMovies(movieJsonData)
 
     }
 
 
     override fun getLocalMovies(): LiveData<List<Movie>> {
-        moviesList = MovieData.parseMovies(context)
+        val movieJsonData = MovieData.readMovies(context)
+        moviesList = MovieData.parseMovies(movieJsonData)
         movies.value = moviesList
         return movies
     }

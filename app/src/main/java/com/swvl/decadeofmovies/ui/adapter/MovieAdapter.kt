@@ -60,17 +60,39 @@ class MovieAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[holder.adapterPosition]
+        val item = values[position]
         holder.idView.text = item.title
         holder.contentView.text = item.year
         holder.genres.text = item.genres.toString()
         holder.ratingBar.rating = item.rating.toFloat()
 
-        selectedMovie = item
-        with(holder.itemView) {
-            tag = item
-            setOnClickListener(onClickListener)
+
+        holder.itemView.setOnClickListener {
+
+            selectedMovie = item
+            if (twoPane) {
+                val fragment = MovieDetailFragment().apply {
+                    arguments = Bundle().apply {
+
+                        putSerializable("movie", selectedMovie)
+
+                    }
+                }
+
+
+                parentActivity.supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.item_detail_container, fragment)
+                    .commit()
+            } else {
+                val intent = Intent(holder.itemView.context, MovieDetailActivity::class.java).apply {
+                    //                    putExtra(ItemDetailFragment.ARG_ITEM_ID, item.id)
+                    putExtra("movie", selectedMovie)
+                }
+                holder.itemView.context.startActivity(intent)
+            }
         }
+
 
     }
 
