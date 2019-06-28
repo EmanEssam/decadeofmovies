@@ -78,8 +78,8 @@ class MovieListActivity : AppCompatActivity(), KodeinAware {
         inflater.inflate(R.menu.search_menu, menu)
         val searchItem = menu!!.findItem(R.id.action_search)
         searchView = searchItem.actionView as SearchView
-        searchView.setSubmitButtonEnabled(true)
-        searchView.setQueryHint("Search By Movie name")
+        searchView.isSubmitButtonEnabled = true
+        searchView.queryHint = "Search By Movie name"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String): Boolean {
 

@@ -23,7 +23,7 @@ class MovieDetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val movie: Movie = intent.extras.get("movie") as Movie
 
-        setTitle(movie.title)
+        title = movie.title
 
 
         // Show the Up button in the action bar.

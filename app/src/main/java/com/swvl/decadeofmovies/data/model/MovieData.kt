@@ -11,7 +11,7 @@ open class MovieData {
     companion object {
 
         fun readMovies(context: Context): String {
-            var json: String = ""
+            var json = ""
             try {
                 val inputStream: InputStream = context.assets.open("movies.json")
                 val size: Int = inputStream.available()

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.swvl.decadeofmovies.R
 import com.swvl.decadeofmovies.data.model.Movie
 import com.swvl.decadeofmovies.data.model.Photo
+import com.swvl.decadeofmovies.data.service.RetrofitHelper
 import com.swvl.decadeofmovies.ui.adapter.PhotosAdapter
 import com.swvl.decadeofmovies.ui.viewmodel.DetailsActivityViewModel
 import com.swvl.decadeofmovies.ui.viewmodel.DetailsActivityViewModelFactory
@@ -39,7 +40,7 @@ class MovieDetailFragment : Fragment(), KodeinAware {
 
     private lateinit var selectedMovies: Movie
     private lateinit var photosAdapter: PhotosAdapter
-    val photo = MutableLiveData<Photo>()
+    private val photo = MutableLiveData<Photo>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -68,12 +69,19 @@ class MovieDetailFragment : Fragment(), KodeinAware {
             rootView.movie_genres?.text = selectedMovies.genres.toString().replace("[", "").replace("]", "")
         }
 
+        val service = RetrofitHelper.makeRetrofitService()
         if (photo.value == null) {
             val viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(DetailsActivityViewModel::class.java)
-            viewModel.getPhotosFromApi(selectedMovies.title).observe(this, Observer { it ->
+            viewModel.getPhotosFromApi(selectedMovies.title, service).observe(this, Observer {
                 photo.value = it
-                showPhotoList(rootView)
+                if (photo.value == null) {
+
+                    showErrorScreen(rootView)
+                } else {
+
+                    showPhotoList(rootView)
+                }
 
 
             })
@@ -86,8 +94,20 @@ class MovieDetailFragment : Fragment(), KodeinAware {
         return rootView
     }
 
+    private fun showErrorScreen(rootView: View) {
+
+        rootView.photoPbar.visibility = View.GONE
+
+        rootView.error_tv.visibility = View.VISIBLE
+
+        rootView.photos_rv.visibility = View.GONE
+
+
+    }
+
     private fun showPhotoList(rootView: View) {
         rootView.photoPbar.visibility = View.GONE
+        rootView.error_tv.visibility = View.GONE
         setupPhotoAdapter(rootView, photo)
     }
 
