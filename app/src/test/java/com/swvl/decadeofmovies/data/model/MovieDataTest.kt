@@ -15,7 +15,7 @@ class MovieDataTest {
     @Mock
     lateinit var context: Context
 
-    val json = "{\n" +
+    private val json = "{\n" +
             "    \"movies\": [\n" +
             "        {\n" +
             "            \"title\": \"(500) Days of Summer\",\n" +
