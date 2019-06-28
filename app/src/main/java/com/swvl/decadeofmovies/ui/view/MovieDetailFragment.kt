@@ -16,6 +16,7 @@ import com.swvl.decadeofmovies.data.service.RetrofitHelper
 import com.swvl.decadeofmovies.ui.adapter.PhotosAdapter
 import com.swvl.decadeofmovies.ui.viewmodel.DetailsActivityViewModel
 import com.swvl.decadeofmovies.ui.viewmodel.DetailsActivityViewModelFactory
+import com.swvl.decadeofmovies.utils.MOVIE_KEY
 import kotlinx.android.synthetic.main.movie_detail.view.*
 import kotlinx.android.synthetic.main.movie_list_content.view.*
 import org.kodein.di.Kodein
@@ -23,20 +24,13 @@ import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
 
-/**
- * A fragment representing a single Item detail screen.
- * This fragment is either contained in a [MovieListActivity]
- * in two-pane mode (on tablets) or a [MovieDetailActivity]
- * on handsets.
- */
+
 class MovieDetailFragment : Fragment(), KodeinAware {
 
-    /**
-     * The dummy content this fragment is presenting.
-     */
-    override val kodein: Kodein by closestKodein()
 
-    private val viewModelFactory: DetailsActivityViewModelFactory by instance()
+    override val kodein: Kodein by closestKodein() // Kodein DI instance
+
+    private val viewModelFactory: DetailsActivityViewModelFactory by instance() // get viewModelFactory instance by Kodein
 
     private lateinit var selectedMovies: Movie
     private lateinit var photosAdapter: PhotosAdapter
@@ -44,11 +38,9 @@ class MovieDetailFragment : Fragment(), KodeinAware {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            if (it.containsKey("movie")) {
-                // Load the dummy content specified by the fragment
-                // arguments. In a real-world scenario, use a Loader
-                // to load content from a content provider.
-                selectedMovies = it.getSerializable("movie") as Movie
+            if (it.containsKey(MOVIE_KEY)) {
+
+                selectedMovies = it.getSerializable(MOVIE_KEY) as Movie
 
 
             }
@@ -122,10 +114,7 @@ class MovieDetailFragment : Fragment(), KodeinAware {
     }
 
     companion object {
-        /**
-         * The fragment argument representing the item ID that this fragment
-         * represents.
-         */
+
         const val ARG_ITEM_ID = "item_id"
     }
 }

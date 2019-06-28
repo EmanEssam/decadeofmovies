@@ -53,16 +53,13 @@ class MovieListActivity : AppCompatActivity(), KodeinAware {
             .get(MovieViewModel::class.java)
 
         if (item_detail_container != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
+
             twoPane = true
         }
 
 
         // Observing LiveData from the QuotesViewModel which in turn observes
-        // LiveData from the repository, which observes LiveData from the DAO ☺
+        // LiveData from the repository, which observes LiveData from the DAO
         viewModel.getLocalMovies().observe(this, Observer { movies ->
             movieAdapter = MovieAdapter(this, movies, twoPane)
             item_list.adapter = movieAdapter
@@ -76,11 +73,17 @@ class MovieListActivity : AppCompatActivity(), KodeinAware {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.search_menu, menu)
+
         val searchItem = menu!!.findItem(R.id.action_search)
+
         searchView = searchItem.actionView as SearchView
+
         searchView.isSubmitButtonEnabled = true
-        searchView.queryHint = "Search By Movie name"
+
+        searchView.queryHint = getString(R.string.searchview_hint)
+
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
             override fun onQueryTextChange(newText: String): Boolean {
 
                 getFilteredMoviesFromDb(newText)
@@ -94,10 +97,14 @@ class MovieListActivity : AppCompatActivity(), KodeinAware {
         return super.onCreateOptionsMenu(menu)
     }
 
-    private fun getFilteredMoviesFromDb(newText: String) {
+    private fun getFilteredMoviesFromDb(newText: String) {  //getting the search result from Room Db using livedata
+
         val searchTextQuery = "%$newText%"
+
         viewModel.getMoviesByName(searchTextQuery).observe(this, Observer {
+
             movieAdapter = MovieAdapter(this, it, twoPane)
+
             item_list.adapter = movieAdapter
         })
     }

@@ -13,6 +13,7 @@ import com.swvl.decadeofmovies.data.model.Movie
 import com.swvl.decadeofmovies.ui.view.MovieDetailActivity
 import com.swvl.decadeofmovies.ui.view.MovieDetailFragment
 import com.swvl.decadeofmovies.ui.view.MovieListActivity
+import com.swvl.decadeofmovies.utils.MOVIE_KEY
 import kotlinx.android.synthetic.main.movie_list_content.view.*
 
 class MovieAdapter(
@@ -33,7 +34,7 @@ class MovieAdapter(
                 val fragment = MovieDetailFragment().apply {
                     arguments = Bundle().apply {
 
-                        putSerializable("movie", selectedMovie)
+                        putSerializable(MOVIE_KEY, selectedMovie)
 
                     }
                 }
@@ -45,8 +46,8 @@ class MovieAdapter(
                     .commit()
             } else {
                 val intent = Intent(v.context, MovieDetailActivity::class.java).apply {
-                    //                    putExtra(ItemDetailFragment.ARG_ITEM_ID, item.id)
-                    putExtra("movie", selectedMovie)
+
+                    putExtra(MOVIE_KEY, selectedMovie)
                 }
                 v.context.startActivity(intent)
             }
@@ -74,7 +75,7 @@ class MovieAdapter(
                 val fragment = MovieDetailFragment().apply {
                     arguments = Bundle().apply {
 
-                        putSerializable("movie", selectedMovie)
+                        putSerializable(MOVIE_KEY, selectedMovie)
 
                     }
                 }
@@ -86,8 +87,8 @@ class MovieAdapter(
                     .commit()
             } else {
                 val intent = Intent(holder.itemView.context, MovieDetailActivity::class.java).apply {
-                    //                    putExtra(ItemDetailFragment.ARG_ITEM_ID, item.id)
-                    putExtra("movie", selectedMovie)
+
+                    putExtra(MOVIE_KEY, selectedMovie)
                 }
                 holder.itemView.context.startActivity(intent)
             }

@@ -19,9 +19,6 @@ class MovieDaoImpl : MovieDao {
     }
 
 
-//    override fun addMovie(movie: Movie) {
-//    }
-
     private val quoteList = mutableListOf<Movie>()
     private val quotes = MutableLiveData<List<Movie>>()
 

@@ -11,6 +11,7 @@ import com.swvl.decadeofmovies.data.model.MovieData
 import com.swvl.decadeofmovies.utils.Converters
 import java.util.concurrent.Executors
 
+const val DATABASE_NAME = "movies_database"
 @Database(entities = [Movie::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class MovieDatabase : RoomDatabase() {
@@ -23,16 +24,27 @@ abstract class MovieDatabase : RoomDatabase() {
         private var instance: MovieDatabase? = null
 
         fun getInstance(context: Context): MovieDatabase? {
+
             if (instance == null) {
+
                 synchronized(MovieDatabase::class) {
+
                     instance = Room.databaseBuilder(
+
                         context.applicationContext,
-                        MovieDatabase::class.java, "movies_database"
+
+                        MovieDatabase::class.java, DATABASE_NAME
+
                     ).addCallback(object : RoomDatabase.Callback() {
+
                         override fun onCreate(db: SupportSQLiteDatabase) {
+
                             super.onCreate(db)
+
                             Executors.newSingleThreadScheduledExecutor().execute {
+
                                 val movieJsonData = MovieData.readMovies(context)
+
                                 getInstance(context)!!.movieDao().insertAll(MovieData.parseMovies(movieJsonData))
                             }
                         }

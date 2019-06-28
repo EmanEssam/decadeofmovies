@@ -7,3 +7,4 @@ const val FORMAT_PARAMETER = "json"
 const val NO_JSON_CALLBACK_PARAMETER = 1
 const val PAGE_PARAMETER = 1
 const val PER_PAGE_PARAMETER = 10
+const val MOVIE_KEY = "movie"

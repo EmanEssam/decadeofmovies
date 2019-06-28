@@ -5,7 +5,6 @@ import com.swvl.decadeofmovies.data.repository.MovieRepository
 
 class MovieViewModel(private val movieRepository: MovieRepository) : ViewModel() {
 
-    fun getMovies() = movieRepository.getMovies()
 
     fun getLocalMovies() = movieRepository.getLocalMovies()
 

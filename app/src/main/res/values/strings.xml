@@ -6,4 +6,5 @@
     <string name="movie_photo">Movie Photo</string>
     <string name="genres">Genres :</string>
     <string name="starring">Starring :</string>
+    <string name="searchview_hint">Search By Movie name</string>
 </resources>

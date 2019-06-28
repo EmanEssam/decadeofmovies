@@ -26,12 +26,6 @@ class MovieRepositoryImpl(private val movieDao: MovieDao, private val context: C
     }
 
 
-    private fun parsedMovies(): List<Movie> {
-        val movieJsonData = MovieData.readMovies(context)
-        return MovieData.parseMovies(movieJsonData)
-
-    }
-
 
     override fun getLocalMovies(): LiveData<List<Movie>> {
         val movieJsonData = MovieData.readMovies(context)
@@ -44,9 +38,6 @@ class MovieRepositoryImpl(private val movieDao: MovieDao, private val context: C
         return movieDao.getAll()
     }
 
-    //
-    private fun insertMovies(db: MovieDatabase) {
-        db.movieDao().insertAll(parsedMovies())
-    }
+
 }
 
