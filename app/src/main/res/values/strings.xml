@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Decade Of Movies</string>
-    <string name="title_item_detail">Item Detail</string>
     <string name="search_by_movie">Search By Movie</string>
     <string name="release_date">Release Date :</string>
+    <string name="sorry_no_data_available">Sorry No Photos Available</string>
+    <string name="movie_photo">Movie Photo</string>
+    <string name="genres">Genres :</string>
+    <string name="starring">Starring :</string>
 </resources>

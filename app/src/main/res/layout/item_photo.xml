@@ -9,6 +9,7 @@
         android:layout_height="wrap_content">
 
     <ImageView
+            android:contentDescription="@string/movie_photo"
             android:scaleType="fitXY"
             android:src="@drawable/movie_placeholder"
             android:id="@+id/movie_photo"

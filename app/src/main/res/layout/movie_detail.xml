@@ -46,7 +46,7 @@
 
 
         <TextView android:layout_width="wrap_content"
-                  android:text="Genres :"
+                  android:text="@string/genres"
                   android:layout_marginEnd="8dp"
                   android:layout_marginStart="16dp"
                   android:textColor="@color/black"
@@ -69,7 +69,7 @@
 
 
         <TextView android:layout_width="wrap_content"
-                  android:text="Starring :"
+                  android:text="@string/starring"
                   android:layout_marginStart="16dp"
                   android:layout_marginEnd="8dp"
                   android:textColor="@color/black"
@@ -91,6 +91,22 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cast_layout"/>
+
+    <TextView
+            android:text="@string/sorry_no_data_available"
+            android:textColor="@color/error"
+            android:id="@+id/error_tv"
+            android:visibility="gone"
+            android:gravity="center_horizontal"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="100dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cast_layout"

@@ -9,7 +9,7 @@ class Converters {
     fun fromString(value: String): List<String> {
         val listType = object : com.google.gson.reflect.TypeToken<ArrayList<String>>() {
 
-        }.getType()
+        }.type
         return Gson().fromJson(value, listType)
     }
 

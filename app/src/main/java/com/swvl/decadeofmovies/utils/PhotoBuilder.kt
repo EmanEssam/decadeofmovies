@@ -1,11 +1,8 @@
 package com.swvl.decadeofmovies.utils
 
-import android.util.Log
-
 const val PHOTO_BASE_URL = "https://farm"
 const val SLASH = "/"
 const val UNDERSCORE = "_"
-const val IMAGE_SIZE_MEDIUM = "_m"
 const val JPG = ".jpg"
 
 class PhotoBuilder {
