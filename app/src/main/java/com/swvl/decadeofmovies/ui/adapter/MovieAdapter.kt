@@ -105,7 +105,4 @@ class MovieAdapter(
         val ratingBar: RatingBar = view.ratingBar
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return super.getItemViewType(position)
-    }
 }

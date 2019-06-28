@@ -26,7 +26,7 @@ class MovieRepositoryImpl(private val movieDao: MovieDao, private val context: C
     }
 
 
-    private fun getParesdMovies(): List<Movie> {
+    private fun parsedMovies(): List<Movie> {
         val movieJsonData = MovieData.readMovies(context)
         return MovieData.parseMovies(movieJsonData)
 
@@ -46,7 +46,7 @@ class MovieRepositoryImpl(private val movieDao: MovieDao, private val context: C
 
     //
     private fun insertMovies(db: MovieDatabase) {
-        db.movieDao().insertAll(getParesdMovies())
+        db.movieDao().insertAll(parsedMovies())
     }
 }
 
