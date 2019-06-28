@@ -21,7 +21,7 @@ import org.robolectric.RobolectricTestRunner
 class MovieViewModelTest {
 
 
-    lateinit var movieViewModel: MovieViewModel
+    private lateinit var movieViewModel: MovieViewModel
 
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
@@ -30,7 +30,7 @@ class MovieViewModelTest {
     lateinit var movieRepository: MovieRepository
 
 
-    var movie: MutableLiveData<List<Movie>> = MutableLiveData()
+    private var movie: MutableLiveData<List<Movie>> = MutableLiveData()
 
     @Mock
     lateinit var context: Context
